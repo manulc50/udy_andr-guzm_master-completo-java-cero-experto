@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Configuración de Persistencia -->
+
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+    <!-- Creamos una unidad de persistencia de tipo local porque nuestra base de datos MySQL está en localhost -->
+    <!-- El atributo "transaction-type" puede ser "JTA" o "RESOURCE_LOCAL" -->
+    <!-- "JTA" es cuando usamos un servidor de aplicaciones como por ejemplo GlassFish, WildFly, etc... -->
+    <!-- "RESOURCE_LOCAL" es cuando trabajamos de forma local(localhost) como en este caso, ya que esta aplicación es una aplicación de escritorio que no requiere un servidor de aplicaciones -->
+    <persistence-unit name="ejemploJPA" transaction-type="RESOURCE_LOCAL">
+        <!-- Indicamos que el proveedor de JPA es Hibernate -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!-- Indicamos donde están las clases entidad o clases de persistencia -->
+        <!-- Especificar las clases que se necesita escanear en busca de anotaciones JPA es opcional, ya que por defecto se escanea el proyecto desde la raíz -->
+        <class>org.aguzman.hibernateapp.entity.Cliente</class>
+        <!-- Con este elemento puesto a true nos volvemos más estrictos al obligar a indicar el elemento anterior "class" con las clases que queremos que se escaneen -->
+        <!-- Es decir, las clases del proyecto que no estén indicadas aquí con el elemento "class" se ignoran -->
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <!-- Propiedades para la conexión con la base de datos MySQL -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/java_curso?serverTimezone=Europe/Madrid"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password" value="root"/>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <!-- Si no se especifica el dialecto, se detecta automáticamente por defecto, pero, como buena práctica, se recomienda especificarlo -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <!-- Para mostrar las consultas SQL en el log -->
+            <property name="hibernate.show_sql" value="true"/>
+            <!-- Esta propiedad con el valor "drop-and-create" elimina y vuelve a crear de forma automática las tablas en la base de datos asociadas a
+                 las clases entidad o de persistencia cada vez que se ejecute la aplicación -->
+            <!-- Esta propiedad es para realizar nuestras pruebas en el entorno de Desarollo. No debe usarse en el entorno de Producción -->
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+        </properties>
+    </persistence-unit>
+</persistence>
